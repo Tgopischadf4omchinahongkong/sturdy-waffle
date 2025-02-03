@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send IP to Discord</title>
+</head>
+<body>
+    <h1>Send Your IP to Discord</h1>
+    <button id="sendIpButton">Send IP</button>
+
+    <script>
+        document.getElementById('sendIpButton').addEventListener('click', function() {
+            fetch('/api/sendIp')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('IP sent to Discord!');
+                    } else {
+                        alert('Failed to send IP.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred.');
+                });
+        });
+    </script>
+</body>
+</html>
